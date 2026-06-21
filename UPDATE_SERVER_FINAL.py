@@ -207,4 +207,8 @@ if __name__ == "__main__":
         logger.warning(f"⚠ El servidor funcionará pero las descargas fallarán")
         logger.warning(f"⚠ Coloca Client.zip en UpdateServer/")
     
-    run_server()
+    # Leer puerto desde variable de entorno (para Zeabur)
+    port = int(os.environ.get('PORT', 8011))
+    host = os.environ.get('HOST', '0.0.0.0')
+    
+    run_server(host=host, port=port)
