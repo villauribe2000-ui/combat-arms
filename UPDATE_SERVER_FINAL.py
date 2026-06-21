@@ -191,7 +191,11 @@ def run_server(host="0.0.0.0", port=8011):
     logger.info(f"✓ Servidor escuchando en http://0.0.0.0:{port}/update/")
     logger.info(f"✓ Conéctate desde otros PCs usando tu IP local (ej: http://192.168.x.x:8011)")
     logger.info(f"✓ Client.zip ubicado en: {CLIENT_ZIP}")
-    logger.info(f"✓ Tamaño de Client.zip: {CLIENT_ZIP.stat().st_size / (1024*1024):.1f} MB")
+    
+    if CLIENT_ZIP.exists():
+        logger.info(f"✓ Tamaño de Client.zip: {CLIENT_ZIP.stat().st_size / (1024*1024):.1f} MB")
+    else:
+        logger.warning(f"⚠ Client.zip no encontrado (las descargas fallarán hasta que se agregue)")
     
     try:
         httpd.serve_forever()
@@ -201,14 +205,9 @@ def run_server(host="0.0.0.0", port=8011):
 
 
 if __name__ == "__main__":
-    # Verificar que Client.zip existe
-    if not CLIENT_ZIP.exists():
-        logger.warning(f"⚠ ADVERTENCIA: {CLIENT_ZIP} no encontrado")
-        logger.warning(f"⚠ El servidor funcionará pero las descargas fallarán")
-        logger.warning(f"⚠ Coloca Client.zip en UpdateServer/")
-    
     # Leer puerto desde variable de entorno (para Zeabur)
     port = int(os.environ.get('PORT', 8011))
     host = os.environ.get('HOST', '0.0.0.0')
     
+    logger.info(f"Iniciando servidor sin Cliente (solo información de servidores)")
     run_server(host=host, port=port)
